@@ -48,7 +48,7 @@ class TaskController  {
     // Rota para listar todas as tarefas
     async all(req, res) {
         // Encontrar todos os valores baseado no filtro de macaddress (para mostrar só as tarefas de determinado dispositivo)
-        await TaskModel.find( { macaddress: {'$in': req.body.macaddress} })
+        await TaskModel.find( { macaddress: {'$in': req.params.macaddress} })
               //traz organizado por data e hora (sort)
               .sort('when')
               // Se caso der tudo certo, retorna status sucesso
@@ -110,7 +110,7 @@ class TaskController  {
         // Também filtra por macaddress pois queremos apenas as tarefas do dispositivo (usuário) que está solicitando
         await TaskModel.find({
             'when': {'$lt': current},
-            'macaddress': {'$in': req.body.macaddress}
+            'macaddress': {'$in': req.params.macaddress}
         })
         .sort('when')
         .then( response => {
@@ -127,7 +127,7 @@ class TaskController  {
         // Utiliza funções que a biblioteca date-fns fornece referente ao início e fim do dia para utilizarmos na comparação
         // ou seja: essa função filtra os registros do dia corrente
         await TaskModel.find({
-            'macaddress': {'$in': req.body.macaddress},
+            'macaddress': {'$in': req.params.macaddress},
             'when': {'$gte': startOfDay(current) , '$lte': endOfDay(current)}
         })
         .sort('when')
@@ -142,7 +142,7 @@ class TaskController  {
     // Filtrar as tarefas da semama
     async week(req, res) {
         await TaskModel.find({
-            'macaddress': {'$in': req.body.macaddress},
+            'macaddress': {'$in': req.params.macaddress},
             'when': {'$gte': startOfWeek(current), '$lte': endOfWeek(current)}
         })
         .sort('when')
@@ -157,7 +157,7 @@ class TaskController  {
     // Filtrar as tarefas por mês
     async month(req, res){
         await TaskModel.find({
-            'macaddress': {'$in': req.body.macaddress},
+            'macaddress': {'$in': req.params.macaddress},
             'when': {'$gte': startOfMonth(current), '$lte': endOfMonth(current)}
         })
         .sort('when')
@@ -172,7 +172,7 @@ class TaskController  {
     // Filtrar as tarefas por ano
     async year(req, res){
         await TaskModel.find({
-            'macaddress': {'$in': req.body.macaddress},
+            'macaddress': {'$in': req.params.macaddress},
             'when': {'$gte': startOfYear(current), '$lte': endOfYear(current)}
         })
         .sort('when')
